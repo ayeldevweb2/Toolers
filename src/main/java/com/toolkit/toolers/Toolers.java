@@ -195,6 +195,7 @@ public class Toolers extends javax.swing.JFrame {
         // or: FlatIntelliJLaf.setup();
         // or: FlatDarculaLaf.setup();
         /* Create and display the form */
+        
         java.awt.EventQueue.invokeLater(() -> new Toolers().setVisible(true));
     }
 
