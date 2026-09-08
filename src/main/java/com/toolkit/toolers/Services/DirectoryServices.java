@@ -26,10 +26,8 @@ public class DirectoryServices {
         String appDir = ConfigService.loadConfig().getProperty("app.dir");
         Path root = Paths.get(appDir, "Repo");
         
-
         try {
         Files.createDirectories(root);
-        ConfigService.loadConfig().setProperty("app.repoDir", root.toString());
         ConfigService.saveConfig();
 
         } catch (IOException e) {

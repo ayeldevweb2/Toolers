@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Array;
 import java.util.Properties;
 
 public class ConfigService {
@@ -15,7 +16,7 @@ public class ConfigService {
         File configFile = new File(userHome, CONFIG_FILE_NAME);
 
         if (!configFile.exists())
-            createDefaultConfig(configFile, filePath);
+            createConfig(configFile, filePath);
 
         try (FileInputStream input = new FileInputStream(configFile)) {
             properties.load(input);
@@ -28,13 +29,14 @@ public class ConfigService {
         return properties;
     }
 
+
     public static Properties loadConfig() {
-        
+
         String userHome = System.getProperty("user.home");
         File configFile = new File(userHome, CONFIG_FILE_NAME);
 
         if (!configFile.exists())
-            createDefaultConfig(configFile, "");
+            createDefaultConfig(configFile);
 
         try (FileInputStream input = new FileInputStream(configFile)) {
             properties.load(input);
@@ -43,13 +45,12 @@ public class ConfigService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return properties;
     }
 
-    private static void createDefaultConfig(File configFile, String filePath) {
+    private static void createDefaultConfig(File configFile) {
         Properties defaults = new Properties();
-        defaults.setProperty("app.dir", filePath);
+        defaults.setProperty("app.dir", "");
         defaults.setProperty("app.repoDir", "");
         defaults.setProperty("app.user", "");
 
@@ -61,13 +62,14 @@ public class ConfigService {
         }
     }
 
-    public static void createConfig(String filePath) {
+    public static void createConfig(File configFile, String filePath) {
         String _userHome = System.getProperty("user.home");
         File _configFile = new File(_userHome, CONFIG_FILE_NAME);
         Properties defaults = new Properties();
         defaults.setProperty("app.dir", filePath);
         defaults.setProperty("app.repoDir", filePath);
         defaults.setProperty("app.user", "");
+        
 
         try (FileOutputStream output = new FileOutputStream(_configFile)) {
             defaults.store(output, "Default application configuration");
@@ -77,7 +79,7 @@ public class ConfigService {
         }
     }
 
-      public static void saveConfig() {
+    public static void saveConfig() {
         String userHome = System.getProperty("user.home");
         File configFile = new File(userHome, CONFIG_FILE_NAME);
 

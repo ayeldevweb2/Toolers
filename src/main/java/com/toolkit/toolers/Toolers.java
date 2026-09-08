@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Properties;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -44,7 +46,7 @@ public class Toolers extends javax.swing.JFrame {
      * Creates new form Index
      */
     public Toolers() {
-        initComponents();
+            initComponents();
     }
 
     /**
@@ -155,7 +157,6 @@ public class Toolers extends javax.swing.JFrame {
         if (targetDir.exists() && parentDir != null) {
             System.err.println("Directory Exists!");
             JOptionPane.showMessageDialog(jPanel2, "Directory Exists!", "Error", JOptionPane.ERROR_MESSAGE);
-            new Toolers().setVisible(false);
             ConfigService.loadConfig(filePath);
             new BaseFrame().setVisible(true);
             this.dispose();
@@ -166,23 +167,26 @@ public class Toolers extends javax.swing.JFrame {
 
         if (directoryCreated) {
             try {
-                
-                ConfigService.loadConfig(filePath);
+                Properties props = ConfigService.loadConfig(targetDir.toString());
+                props.setProperty("app.dir", targetDir.toString());
+                props.setProperty("app.repoDir", targetDir.toString() + "Repo");
+                ConfigService.saveConfig();
+
             } catch (Exception e) {
-               e.printStackTrace();
+                e.printStackTrace();
             } finally {
                 JOptionPane.showMessageDialog(jPanel2, "Directory Created!", "Success", JOptionPane.OK_OPTION);
-                new Toolers().setVisible(false);
                 new BaseFrame().setVisible(true);
                 this.dispose();
             }
-                return;
+            return;
         }
 
         // try {
-        //     targetDir.createNewFile();
+        // targetDir.createNewFile();
         // } catch (IOException ex) {
-        //     System.getLogger(Toolers.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        // System.getLogger(Toolers.class.getName()).log(System.Logger.Level.ERROR,
+        // (String) null, ex);
         // }
     }// GEN-LAST:event_ProceedBtnActionPerformed
 
@@ -223,7 +227,13 @@ public class Toolers extends javax.swing.JFrame {
         // or: FlatDarculaLaf.setup();
         /* Create and display the form */
 
-        java.awt.EventQueue.invokeLater(() -> new Toolers().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+            if (ConfigService.loadConfig().getProperty("app.dir", "").isEmpty()) {
+                new Toolers().setVisible(true);
+            } else {
+                new BaseFrame().setVisible(true);
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
