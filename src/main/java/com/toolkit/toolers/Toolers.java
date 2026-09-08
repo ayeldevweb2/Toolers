@@ -169,7 +169,7 @@ public class Toolers extends javax.swing.JFrame {
             try {
                 Properties props = ConfigService.loadConfig(targetDir.toString());
                 props.setProperty("app.dir", targetDir.toString());
-                props.setProperty("app.repoDir", targetDir.toString() + "Repo");
+                props.setProperty("app.repoDir", targetDir.toPath().resolve("Repo").toString());
                 ConfigService.saveConfig();
 
             } catch (Exception e) {
